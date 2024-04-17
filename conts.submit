@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name=conts    # Job name
+#SBATCH --mail-type=FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=bmanookian@coh.org     # Where to send mail       
+#SBATCH -n 16                        # number of cores requested
+#SBATCH -N -1                         # number of nodes set to -1 to limit to single node
+#SBATCH --mem=150G                    # memory reguire per node
+#SBATCH --time=1:59:00            # Time limit hrs:min:sec
+#SBATCH --output=nts%j.log   # Standard output and error log
+
+
+#Replace sleep with your commands below
+
+module load Python/3.8.1-foss-2018b
+#
+python run.py 
+
+#sleep 600s

@@ -3,12 +3,15 @@ import sys
 sys.path.append('/home/bmanookian/Contacts/')
 import getContactProcess as gC
 
+# outputdir
+outdir='./'
+
 # INPUT FILES
   # if using a get Contacts tsv file put directory below 
 inputtsv=None
 
   # if using a csv traj file put fil directory below
-csvtraj='/data/nts/traj.csv'
+csvtraj='./testdata.csv'
 
   # numpy traj file - for numpy trajectory include both the trajectory and labels numpys
 numpytraj=None
@@ -16,24 +19,24 @@ numpylabels=None
 
 # PARAMETERS
 # remove singles and neighbors
-removesingles=True
-removeneighbors=True;neighbors=1
+removesingles=False
+removeneighbors=False;neighbors=1
 
 # compute the MI matrix - if MI given provide numpy
-computeMImarix=True;numprocs=28;MIfile='/directory/to/MI/file.npy'
+MIfile=None
+computeMImarix=True;numprocs=28
 
 # Use MI to remove contacts and save new csv
-findremovepairs=True;thresh=0.01
-outputcsv=inputtsv[:-4]+f'_th{thresh}.csv'
-MIgiven=False
+findremovepairs=False;thresh=0.01
+outputcsv=outdir+'th{thresh}.csv'
 
 # Extract input trajectory from contact file
 if inputtsv is not None:
 	md=gC.traj_from_contact(fin=inputtsv)
 
 	print('Input number of features:',md.unqpair.shape[0])
-	np.save(inputtsv[:-4]+'_traj.npy',md.traj)
-	np.save(inputtsv[:-4]+'_unqpair.npy',md.unqpair)
+	np.save(outdir+'traj.npy',md.traj)
+	np.save(outdir+'labels.npy',md.unqpair)
 
 if csvtraj is not None:
 	csvdata=gC.datareader(csvtraj)
@@ -55,11 +58,11 @@ print('Number of features after first round of feature selection:',md.unqpair.sh
 # Compute MI matrix and find low MI features to remove
 
 if computeMImarix==True:
-	if MIgiven==True:
+	if MIfile is not None:
 		md.compute_MI_matrix(numprocs,MI=np.load(MIfile))
 	else:
 		md.compute_MI_matrix(numprocs)
-		np.save(inputtsv[:-4]+'_MI.npy',md.MI)
+		np.save(outdir+'MI.npy',md.MI)
 
 if findremovepairs==True:
 	md.find_pairs_to_remove(thresh)
@@ -71,7 +74,7 @@ print('Number of features after removing low MI features:',md.unqpair.shape[0])
 
 print('Trajectory written to output with shape:',md.traj.shape)
 
-gC.datawrite(outputcsv,md.traj.astype(int),labels=md.pairValid)
+gC.datawrite(outdir+'out_traj.csv',md.traj.astype(int),labels=md.pairValid)
 
 
 
