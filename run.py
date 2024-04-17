@@ -27,7 +27,7 @@ MIfile=None
 computeMImarix=True;numprocs=28
 
 # Use MI to remove contacts and save new csv
-findremovepairs=False;thresh=0.01
+findremovepairs=True;thresh=0.01
 outputcsv=outdir+'th{thresh}.csv'
 
 # Extract input trajectory from contact file
@@ -40,7 +40,8 @@ if inputtsv is not None:
 
 if csvtraj is not None:
 	csvdata=gC.datareader(csvtraj)
-	md=gC.traj_from_contact(traj=csvdata[1:,:].astype(int),unqpair=csvdata[0,:])
+	md=gC.traj_from_contact(traj=csvdata[1:,:].astype(int).T,unqpair=csvdata[0,:])
+	print('Input number of features:',md.unqpair.shape[0])
 if numpytraj is not None:
 	md=gC.traj_from_contact(traj=np.load(numpytraj),unqpair=np.load(numpylabels))
 	print('Input number of features:',md.unqpair.shape[0])
@@ -67,14 +68,14 @@ if computeMImarix==True:
 if findremovepairs==True:
 	md.find_pairs_to_remove(thresh)
 
-print('Number of features after removing low MI features:',md.unqpair.shape[0])
+print('Number of features after removing low MI features:',md.pairValid.shape[0])
 	
 
 # Write to output
 
-print('Trajectory written to output with shape:',md.traj.shape)
+print('Trajectory written to output with shape:',md.traj.T.shape)
 
-gC.datawrite(outdir+'out_traj.csv',md.traj.astype(int),labels=md.pairValid)
+gC.datawrite(outdir+f'out_traj{thresh}.csv',md.traj.astype(int),labels=md.pairValid)
 
 
 
