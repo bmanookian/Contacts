@@ -18,6 +18,10 @@ numpytraj=None
 numpylabels=None
 
 # PARAMETERS
+#Cu Trajectory
+cuttraj=False
+start=None,end=None
+
 # remove singles and neighbors
 removesingles=False
 removeneighbors=False;neighbors=1
@@ -29,6 +33,7 @@ computeMImarix=True;numprocs=28
 # Use MI to remove contacts and save new csv
 findremovepairs=True;thresh=0.01
 outputcsv=outdir+'th{thresh}.csv'
+
 
 # Extract input trajectory from contact file
 if inputtsv is not None:
@@ -45,6 +50,10 @@ if csvtraj is not None:
 if numpytraj is not None:
 	md=gC.traj_from_contact(traj=np.load(numpytraj),unqpair=np.load(numpylabels))
 	print('Input number of features:',md.unqpair.shape[0])
+
+# Cut traj
+if cuttraj==True:
+	md.cuttraj(start,end)
 
 
 # Remove singles and Neighbors if needed
