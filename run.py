@@ -72,7 +72,7 @@ if computeMImarix==True:
 		md.compute_MI_matrix(numprocs,MI=np.load(MIfile))
 	else:
 		md.compute_MI_matrix(numprocs)
-		np.save(outdir+'MI.npy',md.MI)
+		np.save(outdir+f'MI_{thresh}.npy',md.MI)
 
 if findremovepairs==True:
 	md.find_pairs_to_remove(thresh)
@@ -84,7 +84,7 @@ print('Number of features after removing low MI features:',md.pairValid.shape[0]
 
 print('Trajectory written to output with shape:',md.traj.T.shape)
 
-gC.datawrite(outdir+f'out_traj{thresh}.csv',md.traj.astype(int).T,labels=md.pairValid)
+gC.datawrite(outputcsv,md.traj.astype(int).T,labels=md.pairValid)
 
 
 

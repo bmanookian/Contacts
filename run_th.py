@@ -19,7 +19,7 @@ numpylabels='labels.npy'
 
 # PARAMETERS
 #Cu Trajectory
-cuttraj=True
+cuttraj=False
 start=45000;end=63352
 
 # remove singles and neighbors
@@ -27,11 +27,11 @@ removesingles=True
 removeneighbors=True;neighbors=1
 
 # compute the MI matrix - if MI given provide numpy
-MIfile='MI.npy'
+MIfile=None
 computeMImarix=True;numprocs=28
 
 # Use MI to remove contacts and save new csv
-findremovepairs=True;thresh=0.005
+findremovepairs=True;thresh=0.01
 outputcsv=outdir+'th{thresh}.csv'
 
 
@@ -72,7 +72,7 @@ if computeMImarix==True:
 		md.compute_MI_matrix(numprocs,MI=np.load(MIfile))
 	else:
 		md.compute_MI_matrix(numprocs)
-		np.save(outdir+'MI.npy',md.MI)
+		np.save(outdir+f'MI_{thresh}.npy',md.MI)
 
 if findremovepairs==True:
 	md.find_pairs_to_remove(thresh)
@@ -84,7 +84,7 @@ print('Number of features after removing low MI features:',md.pairValid.shape[0]
 
 print('Trajectory written to output with shape:',md.traj.T.shape)
 
-gC.datawrite(outdir+f'out_traj{thresh}.csv',md.traj.astype(int).T,labels=md.pairValid)
+gC.datawrite(outputcsv,md.traj.astype(int).T,labels=md.pairValid)
 
 
 
