@@ -14,8 +14,8 @@ inputtsv=None#'./deact_23.tsv'
 csvtraj=None
 
   # numpy traj file - for numpy trajectory include both the trajectory and labels numpys
-numpytraj='traj.npy'
-numpylabels='labels.npy'
+numpytraj='traj_22.npy'
+numpylabels='22_labels.npy'
 
 # PARAMETERS
 #Cu Trajectory
@@ -23,17 +23,18 @@ cuttraj=False
 start=45000;end=63352
 
 # remove singles and neighbors
-removesingles=True
-removeneighbors=True;neighbors=1
+removesingles=False
+removeneighbors=False;neighbors=1
 
 # compute the MI matrix - if MI given provide numpy
 MIfile=None
-computeMImarix=True;numprocs=28
+computeMImarix=False;numprocs=28
 
 # Use MI to remove contacts and save new csv
-findremovepairs=True;thresh=0.01
+findremovepairs=False;thresh=0.01
 outputcsv=outdir+'th{thresh}.csv'
-
+if findremovepairs==False:
+    outputcsv=outdir+'trajectory.csv'
 
 # Extract input trajectory from contact file
 if inputtsv is not None:
