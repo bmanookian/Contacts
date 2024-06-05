@@ -84,7 +84,7 @@ print('Number of features after removing low MI features:',md.pairValid.shape[0]
 
 print('Trajectory written to output with shape:',md.traj.T.shape)
 
-gC.datawrite(outputcsv,md.traj.astype(int).T,labels=md.pairValid)
+gC.datawrite(outputcsv,md.traj.astype(int).T,labels=md.unqpair)
 
 
 
