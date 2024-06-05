@@ -165,7 +165,7 @@ class traj_from_contact():
     def find_pairs_to_remove(self,th):
         self.indx_pair2remove=np.all(self.D<th,1)
         self.pair2remove=self.unqpair[self.indx_pair2remove]
-        self.pairValid=self.unqpair[~self.indx_pair2remove]
+        self.unqpair=self.unqpair[~self.indx_pair2remove]
         self.traj=self.traj[~self.indx_pair2remove]
         self.DValid=self.D[~self.indx_pair2remove][:,~self.indx_pair2remove]
 
