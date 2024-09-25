@@ -8,18 +8,18 @@ outdir='./'
 
 # INPUT FILES
   # if using a get Contacts tsv file put directory below 
-inputtsv='./deact_23.tsv'
+inputtsv='./180ps.tsv'
 
   # if using a csv traj file put fil directory below
 csvtraj=None
 
   # numpy traj file - for numpy trajectory include both the trajectory and labels numpys
-numpytraj=None
-numpylabels=None
+numpytraj=None#'traj.npy'
+numpylabels=None#'labels.npy'
 
 # PARAMETERS
 #Cu Trajectory
-cuttraj=True
+cuttraj=False
 start=45000;end=63352
 
 # remove singles and neighbors
@@ -27,12 +27,12 @@ removesingles=True
 removeneighbors=True;neighbors=1
 
 # compute the MI matrix - if MI given provide numpy
-MIfile=None
+MIfile=None#'MI.npy'
 computeMImarix=True;numprocs=28
 
 # Use MI to remove contacts and save new csv
-findremovepairs=True;thresh=0.01
-outputcsv=outdir+'th{thresh}.csv'
+findremovepairs=True;thresh=0.005
+outputcsv=outdir+f'th{thresh}.csv'
 
 
 # Extract input trajectory from contact file
@@ -50,6 +50,8 @@ if csvtraj is not None:
 if numpytraj is not None:
 	md=gC.traj_from_contact(traj=np.load(numpytraj),unqpair=np.load(numpylabels))
 	print('Input number of features:',md.unqpair.shape[0])
+
+
 
 # Cut traj
 if cuttraj==True:
@@ -72,12 +74,12 @@ if computeMImarix==True:
 		md.compute_MI_matrix(numprocs,MI=np.load(MIfile))
 	else:
 		md.compute_MI_matrix(numprocs)
-		np.save(outdir+f'MI_{thresh}.npy',md.MI)
+		np.save(outdir+f'MI.npy',md.MI)
 
 if findremovepairs==True:
 	md.find_pairs_to_remove(thresh)
 
-print('Number of features after removing low MI features:',md.pairValid.shape[0])
+print('Number of features after removing low MI features:',md.unqpair.shape[0])
 	
 
 # Write to output

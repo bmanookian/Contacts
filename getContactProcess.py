@@ -86,7 +86,7 @@ def transformRes(pair):
     return res1+'_'+res2
 
 def get_unique_pair(data):
-    P=np.array([a.split(':')[1:3][0]+a.split(':')[1:3][1][:-1]+'_'+b.split(':')[1:3][0]+b.split(':')[1:3][1][:-1] for a,b in data[:,2:]])
+    P=np.array([a.split(':')[1:3][0]+a.split(':')[1:3][1][:]+'_'+b.split(':')[1:3][0]+b.split(':')[1:3][1][:] for a,b in data[:,2:]])
     Pt=np.array([transformRes(p) for p in P])
     u,pair_indx=np.unique(Pt,return_inverse=True)
     return Pt,u,pair_indx
@@ -125,6 +125,8 @@ class traj_from_contact():
     def __init__(self,fin=None,traj=None,unqpair=None):
         if fin is not None:
             self.h,self.data=read_tsv(fin)
+            np.save('h',self.h)
+            np.save('data',self.data)
             self.pair,self.input_unqpair,self.pair_indx=get_unique_pair(self.data)
             T=self.data[:,0].astype(int)
             self.input_traj=np.array(get_traj_p(T,self.pair_indx))
