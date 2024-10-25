@@ -4,6 +4,7 @@ import itertools
 import multiprocessing
 import csv
 import sys
+import pickle
 sys.path.append('/home/bmanookian/Contacts')
 import shortenRes as sR
 
@@ -22,6 +23,14 @@ def datawrite(output,data,labels=None):
             csv_writer.writerow(labels)
         for row in data:
             csv_writer.writerow(row)
+
+def picklewrite(output,data):
+    with open(output, 'wb') as file:
+        pickle.dump(data, file)
+
+def pickleread(picklefile):
+    with open(picklefile, 'rb') as file:
+        return pickle.load(file)
 
 def runParallel(foo,iter,ncore):
     pool=multiprocessing.Pool(processes=ncore)
@@ -122,20 +131,20 @@ def get_traj_p(T,pair_indx): #u also
 
 class traj_from_contact():
     
-    def __init__(self,fin=None,traj=None,unqpair=None):
+    def __init__(self,fin=None,direct='',traj=None,unqpair=None):
         if fin is not None:
-            self.h,self.data=read_tsv(fin)
-            np.save('h',self.h)
-            np.save('data',self.data)
-            self.pair,self.input_unqpair,self.pair_indx=get_unique_pair(self.data)
-            T=self.data[:,0].astype(int)
+            h,data=read_tsv(fin)
+            np.save(f'{direct}/h',h)
+            np.save(f'{direct}/data',data)
+            self.pair,self.input_unqpair,self.pair_indx=get_unique_pair(data)
+            T=data[:,0].astype(int)
             self.input_traj=np.array(get_traj_p(T,self.pair_indx))
         if traj is not None:
             self.input_traj=traj
             self.input_unqpair=unqpair
         self.traj=self.input_traj
-        self.unqpair=self.input_unqpair
-
+        self.unqpair=self.input_unqpair    
+    
     def restore_input_traj(self):
         self.traj=self.input_traj
         self.unqpair=self.input_unqpair
